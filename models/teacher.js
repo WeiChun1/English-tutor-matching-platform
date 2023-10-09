@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Teacher.hasMany(models.Lesson, { foreignKey: 'studnetId' })
     }
   };
   Teacher.init({
@@ -20,8 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     introdution: DataTypes.TEXT,
     avatar: DataTypes.STRING,
     nation: DataTypes.STRING,
-    teach_style: DataTypes.TEXT,
-    avg_score: DataTypes.INTEGER
+    teachStyle: DataTypes.TEXT,
+    avgScore: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Teacher',

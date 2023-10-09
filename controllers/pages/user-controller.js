@@ -1,4 +1,3 @@
-const { Student, Teacher } = require('../../models')
 const userServices = require('../../services/user-services')
 const userController = {
   signUpPage: (req, res) => {
@@ -18,10 +17,15 @@ const userController = {
   signIn: (req, res) => {
     res.redirect('/')
   },
+  profilePage: (req, res) => {
+    console.log(req.user)
+    res.render(`profile`)
+  },
   logout: (req, res) => {
     req.flash('success_messages', '登出成功！')
     req.logout()
     res.redirect('/signin')
-  }
+  },
+  indexPage: (req, res) => res.render('index')
 }
 module.exports = userController

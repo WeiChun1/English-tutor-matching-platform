@@ -9,10 +9,11 @@ const passport = require('./config/passport')
 const session = require("express-session")
 const flash = require('connect-flash')
 const app = express()
+const handlebarsHelpers = require('./helpers/handlebars-helpers')
 const { getUser } = require('./helpers/auth-helpers')
 const methodOverride = require('method-override')
 // set handlebars
-app.engine('hbs', handlebars({ extname: '.hbs' }))
+app.engine('hbs', handlebars({ extname: '.hbs', helpers: handlebarsHelpers }))
 app.set('view engine', 'hbs')
 //set session & initialize passport
 app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }))

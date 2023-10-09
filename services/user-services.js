@@ -21,7 +21,6 @@ const userServices = {
         email: req.body.email,
         password: hash
       }))
-      
       .then(newUser => cb(null, { Student: newUser }))
       .catch(err => cb(err))
   }
