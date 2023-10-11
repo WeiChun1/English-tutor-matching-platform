@@ -3,10 +3,16 @@ const teacherServices = require('../../services/teacher-services')
 
 const teacherController = {
   createTeacherPage: (req, res) => {
-    res.render('teachers/createTeacher')
+    res.render('teachers/teacherInfo')
   },
   createTeacher: (req, res, next) => {
-    teacherServices.createTeacher(req, (err, data) => err ? next(err) : res.redirect(`/profile/${req.user.id}`))
+    teacherServices.createTeacher(req, (err, data) => err ? next(err) : res.redirect(`/profile`))
+  },
+  editTeacherPage: (req, res, next) => {
+    teacherServices.editTeacherPage(req, (err, data) => err ? next(err) : res.render('teachers/teacherInfo', { lesson: data }))
+  },
+  editTeacher: (req, res, next) => {
+    teacherServices.editTeacher(req, (err, data) => err ? next(err) : res.redirect(`/profile`))
   }
 }
 module.exports = teacherController

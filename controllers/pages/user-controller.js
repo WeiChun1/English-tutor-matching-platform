@@ -18,8 +18,12 @@ const userController = {
     res.redirect('/')
   },
   profilePage: (req, res) => {
-    console.log(req.user)
-    res.render(`profile`)
+    if(req.user.teachStyle){
+      res.render('teachers/teacherProfile')
+    }else{
+      res.render('profile')
+    }
+    
   },
   logout: (req, res) => {
     req.flash('success_messages', '登出成功！')

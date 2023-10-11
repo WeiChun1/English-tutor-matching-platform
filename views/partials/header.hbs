@@ -12,11 +12,11 @@
           <li class="nav-item d-inline-flex align-items-center">
             <a href="/profile/{{user.id}}" class="nav-link">{{user.name}}</a>
           </li>
-          {{!-- {{#ifCond user.teachStyle user.isAdmin}} --}}
+          {{#ifCond user.teachStyle user.isAdmin}}
           <li class="nav-item">
             <a href="/teachers" class="nav-link">成為老師</a>
           </li>
-          {{!-- {{/ifCond}} --}}
+          {{/ifCond}}
           <li class="nav-item position-absolute top-50 end-0 translate-middle-y me-4">
             <a href="/logout"><button class="btn btn-outline-success my-sm-0 my-2">Logout</button></a>
           </li>
