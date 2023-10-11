@@ -1,0 +1,51 @@
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-10 mx-auto">
+      <form class="row" action="/admin/categories/{{category.id}}?_method=PUT" method="POST">
+        <div class="col-11">
+          <input class="form-control" type="text" placeholder="name" name="name" value="{{category.name}}">
+        </div>
+        <div class="col-1">
+          <button class="btn btn-major" type="submit" id="search-button"><i class="fas fa-search"></i></button>
+        </div>
+      </form>
+      <div class="row row-cols-sm-3">
+        {{#each teachers}}
+        <div class="col">
+          <div class="card mb-1">
+            <div class="card mb-3">
+              <img class="card-img-top" src="{{this.image}}" alt="{{this.name}}">
+              <div class="card-body p-3">
+                <h6 class="card-title mb-1">{{this.name}}</h6>
+
+                <div class="restaurant-category mb-1">
+                  <i class="fas fa-utensils pr-2"></i> {{this.category}}
+                </div>
+
+                <span class="badge badge-pill badge-danger font-weight-normal">
+                  {{this.rating}}
+                  <i class="fas fa-star fa-xs"></i>
+                </span>
+              </div>
+              <div class="col-auto d-flex justify-content-end flex-wrap">
+                <a class="btn btn-secondary" href="/restaurants/{{this._id}}" class="text-secondary">detail</a>
+                <a class="btn btn-success" href="/restaurants/{{ this._id }}/edit">edit</a>
+                <form action="/restaurants/{{ this._id }}?_method=DELETE" method="POST" style="display: inline;">
+                  <button class="btn btn-danger" type="submit">delete</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    <div class="col-md-2 col-3 mx-auto">
+      
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  //及時搜尋
+</script>

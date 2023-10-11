@@ -23,6 +23,15 @@ const userServices = {
       }))
       .then(newUser => cb(null, { Student: newUser }))
       .catch(err => cb(err))
+  },
+  indexPage: (req, cb) => {
+    Promise.all([
+      Teacher.findAll({ raw: true }),
+      Student.findAll({ raw: true })
+    ])
+    .then(([teachers, students]) => {
+      
+    })
   }
 }
 module.exports = userServices

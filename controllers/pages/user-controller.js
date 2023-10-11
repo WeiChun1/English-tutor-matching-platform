@@ -23,7 +23,6 @@ const userController = {
     }else{
       res.render('profile')
     }
-    
   },
   logout: (req, res) => {
     req.flash('success_messages', '登出成功！')
