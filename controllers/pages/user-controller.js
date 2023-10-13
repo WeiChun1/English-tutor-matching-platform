@@ -15,7 +15,7 @@ const userController = {
     res.render('signin')
   },
   signIn: (req, res) => {
-    res.redirect('/')
+    res.redirect('/tutor')
   },
   profilePage: (req, res) => {
     if(req.user.teachStyle){
@@ -29,6 +29,11 @@ const userController = {
     req.logout()
     res.redirect('/signin')
   },
-  indexPage: (req, res) => res.render('index')
+  indexPage: (req, res, next) => {
+    userServices.indexPage(req, (err, data) => err ? next(err) : res.render(('index'), data))
+  },
+  searchTeacher: (req, res, next) => {
+    userServices.searchTeacher(req, (err, data) => err ? next(err) : res.render(('search'), data))
+  }
 }
 module.exports = userController

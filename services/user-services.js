@@ -1,5 +1,6 @@
 const {Student, Teacher} = require('../models')
 const bcrypt = require('bcryptjs')
+const { getOffset, getPagination } = require('../helpers/pagination-helper')
 const userServices = {
   signUp: (req, cb) => {
     if (req.body.password !== req.body.passwordCheck){
@@ -25,13 +26,48 @@ const userServices = {
       .catch(err => cb(err))
   },
   indexPage: (req, cb) => {
+    const DEFAULT_LIMIT = 6
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || DEFAULT_LIMIT
+    const offset = getOffset(limit, page)
+    
     Promise.all([
-      Teacher.findAll({ raw: true }),
-      Student.findAll({ raw: true })
+      Teacher.findAndCountAll({ 
+        offset,
+        limit,
+        raw: true 
+      }),
+      Student.findAll({ raw: true }),
+      Teacher.findAll({ raw: true })
     ])
-    .then(([teachers, students]) => {
+    .then(([teachers, students, allTeacher]) => {
+      console.log(teachers)
+      teachers.rows.map((teacher) => {
+        if (teacher.teachStyle.length > 50){
+          teacher.teachStyle = teacher.teachStyle.substring(0, 50) + '...'
+        }
+      })
+      const keywords = req.query.keyword
+          if (keywords) { 
+            const keyword = req.query.keyword.trim().toLowerCase()
+            const filterTeachersData = allTeacher.filter(data => data.name.toLowerCase().includes(keyword))
+            for (let i = 0; i < filterTeachersData.length; i++) {
+
+              if (filterTeachersData[i].teachStyle.length > 50) {
+                filterTeachersData[i].teachStyle = filterTeachersData[i].teachStyle.substring(0, 50) + '...'
+              }
+            }
+            teachers.rows = filterTeachersData.slice(offset, offset + limit)
+            teachers.count = filterTeachersData.length
+          }
       
+      cb(null, {
+        teachers: teachers.rows,
+        keywords,
+        pagination: getPagination(limit, page, teachers.count)
+      })
     })
-  }
+    .catch(err => cb(err))
+  },
 }
 module.exports = userServices

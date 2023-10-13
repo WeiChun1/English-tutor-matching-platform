@@ -17,7 +17,6 @@ passport.use(new LocalStrategy(
     Promise.all([
       Teacher.findOne({ where: { email } }),
       Student.findOne({ where: { email} }),
-      
     ])
       .then((user) => {
         // 因為分成兩個model 所以回傳時會是矩陣 找出有資料的那組

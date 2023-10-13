@@ -5,11 +5,11 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     let students = []
     students.push({
-      name: `root`,
-      email: `root@example.com`,
+      name: faker.name.findName(),
+      email: 'root@example.com',
       password: await bcrypt.hash('12345678', 10),
       nation: faker.address.country(),
-      avatar: faker.image.avatar(),
+      avatar: `https://xsgames.co/randomusers/assets/avatars/male/${Math.ceil(Math.random() * 50)}.jpg`,
       introdution: faker.lorem.text(),
       learning_time: -999999,
       is_admin: 1,
@@ -22,7 +22,7 @@ module.exports = {
         email: `user${i + 1}@example.com`,
         password: await bcrypt.hash('12345678', 10),
         nation: faker.address.country(),
-        avatar: faker.image.avatar(),
+        avatar: `https://xsgames.co/randomusers/assets/avatars/male/${Math.ceil(Math.random() * 50)}.jpg`,
         introdution: faker.lorem.text(),
         learning_time: Math.ceil(Math.random()*20),
         created_at: new Date(),

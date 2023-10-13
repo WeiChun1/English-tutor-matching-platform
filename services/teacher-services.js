@@ -53,6 +53,7 @@ const teacherServices = {
     })
       .then((lessons) => {
         let days = []
+        console.log(lessons[0])
         if(!lessons) throw new Error('查無此老師')
         lessons.map(lesson => {
           let day = lesson.startTime.getDay()

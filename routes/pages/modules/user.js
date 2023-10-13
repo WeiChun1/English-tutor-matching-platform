@@ -12,5 +12,7 @@ router.post('/signin', passport.authenticate('local', { failureRedirect: '/signi
 router.get('/profile', authenticated, userController.profilePage)
 router.get('/logout', userController.logout)
 
-router.get('/', authenticated, userController.indexPage)
+router.get('/search', authenticated, userController.searchTeacher)
+
+router.get('/tutor', authenticated, userController.indexPage)
 module.exports = router
