@@ -111,7 +111,6 @@ const teacherServices = {
             })
         ])
           .then(([lessons, teacher]) => {
-            //console.log(JSON.stringify(teacher))
             cb(null, {lessons, teacher})
           })
       })
@@ -129,6 +128,7 @@ const teacherServices = {
       include: Student
     })
     .then(lessons => {
+      console.log(lessons)
       cb(null, { lesson: lessons.slice(0,2)})
     })
     .catch(err => cb(err))

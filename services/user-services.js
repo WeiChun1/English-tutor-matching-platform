@@ -92,8 +92,28 @@ const userServices = {
         nest: true
       })
       .then(teacher => {
+        //設定此老師開始與結束時間
+        let lessonTime
+        for(let i = 0; i < teacher.length; i++){
+          const time_temp = teacher[i].Lessons.startTime
+          const usageTime = teacher[i].Lessons.usageTime 
+          lessonTime = time_temp.toString().split(' GMT')[0]   
+          if (usageTime === 60 && time_temp.getMinutes() === 30) {
+            lessonTime += `-${time_temp.getHours() + 1}:${time_temp.getMinutes()}:00`
+          } else if (usageTime === 60 && time_temp.getMinutes() === 0) {
+            lessonTime += `-${time_temp.getHours() + 1}:${time_temp.getMinutes()}0:00`
+          }else if (usageTime === 30 && time_temp.getMinutes() === 30) {
+            lessonTime += `-${time_temp.getHours() + 1}:${time_temp.getMinutes() - 30}0:00`
+          } else (
+            lessonTime += `-${time_temp.getHours()}:${time_temp.getMinutes() + 30}:00`
+          )
+        }
+        
         if(!teacher) throw new Error('查無此老師')
-        cb(null, teacher)    
+        cb(null, {
+          teacher,
+          lessonTime
+        })    
       })
       .catch(err => cb(err))
   },
@@ -117,7 +137,7 @@ const userServices = {
     .catch(err => cb(err))
   },
   profilePage: (req, cb) => {
-    
+
   }
 }
 module.exports = userServices

@@ -7,8 +7,13 @@ module.exports = {
     const week = [1,2,3,4,5,6,7]
     const time = ["18:00", "18:30", "19:00", "19:30", "20:00", "20:30",]
     const usage_time = [30, 60]
+    const select = [true, false]
     const teachers = await queryInterface.sequelize.query(
       'SELECT id FROM Teachers;',
+      { type: queryInterface.sequelize.QueryTypes.SELECT }
+    )
+    const students = await queryInterface.sequelize.query(
+      'SELECT id FROM Students;',
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     )
     for (let temp = 0; temp < teachers.length; temp ++){
@@ -17,6 +22,7 @@ module.exports = {
       const usage_temp = usage_time[Math.floor(Math.random() * usage_time.length)]
       const teacher_id = teachers[temp].id
       const link = faker.internet.url()
+      let student_id
       for (let i = 0; i < Math.ceil(Math.random() * 2) + 2; i++) {
         for (let n = 0; n < i; n++) {
           days.push(week[Math.floor(Math.random() * 7)])
@@ -27,6 +33,8 @@ module.exports = {
       days.map((day) => {
         for(let index = 0; index < 2; index++){
           let realStartTime = new Date();
+          const selected = select[Math.floor(Math.random() * select.length)]
+          if (selected) student_id = students[Math.floor(Math.random() * (students.length - 1)) + 1].id
           const timeTemp = startTime.split(":");
           //設定起始時間 與近2週課程
           realStartTime.setHours(Number(timeTemp[0]), Number(timeTemp[1]), 0);
@@ -38,9 +46,12 @@ module.exports = {
           if (index % 2 === 1) {
             realStartTime = helpers.addDays(realStartTime, 7);
           }
+          
           lessons.push({
             link,
             teacher_id,
+            student_id,
+            selected,
             start_time: realStartTime,
             usage_time: usage_temp,
             created_at: new Date(),

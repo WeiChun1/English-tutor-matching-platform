@@ -41,7 +41,7 @@
           <option value="" selected disabled>--請選擇時段--</option>
           {{#each teacher}}
             {{#unless this.Lessons.selected}}
-            <option value="{{this.Lessons.startTime}}">{{this.Lessons.startTime}}</option>
+            <option value="{{this.Lessons.startTime}}">{{../lessonTime}}</option>
             {{/unless}}
           {{/each}}
         </select>

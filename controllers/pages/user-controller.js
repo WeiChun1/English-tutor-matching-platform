@@ -43,10 +43,10 @@ const userController = {
   editUser: (req, res) => {
     userServices.editUser(req, (err, data) => err ? next(err) : res.redirect('/profile'))
   },
-  teacherPage: (req, res) => {
-    userServices.teacherPage(req, (err, data) => err ? next(err) : res.render('teachers/teacherProfileForStudent',  {teacher: data}))
+  teacherPage: (req, res, next) => {
+    userServices.teacherPage(req, (err, data) => err ? next(err) : res.render('teachers/teacherProfileForStudent',  data))
   },
-  selectLesson: (req, res) => {
+  selectLesson: (req, res, next) => {
     userServices.selectLesson(req, (err, data) => err ? next(err) : 123)
   }
 }

@@ -1,33 +1,23 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Lessons', {
+    await queryInterface.createTable('Comments', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      start_time: {
-        allowNull: false,
-        type: Sequelize.DATE
+      content: {
+        type: Sequelize.TEXT
       },
-      usage_time: {
-        allowNull: false,
+      teacherId: {
         type: Sequelize.INTEGER
       },
-      link: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      selected: {
-        defaultValue: false,
-        type: Sequelize.BOOLEAN
-      },
-      student_id: {
+      studentId: {
         type: Sequelize.INTEGER
       },
-      teacher_id: {
+      score: {
         type: Sequelize.INTEGER
       },
       created_at: {
@@ -41,6 +31,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Lessons');
+    await queryInterface.dropTable('Comments');
   }
 };

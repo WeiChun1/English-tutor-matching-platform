@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Lesson.belongsTo(models.Student, { foreignKey: 'studnetId' })
+      Lesson.belongsTo(models.Student, { foreignKey: 'studentId' })
       Lesson.belongsTo(models.Teacher, { foreignKey: 'teacherId' })
     }
   };
@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     usageTime: DataTypes.INTEGER,
     link: DataTypes.STRING,
     selected: DataTypes.BOOLEAN,
-    studnetId: DataTypes.INTEGER,
+    studentId: DataTypes.INTEGER,
     teacherId: DataTypes.INTEGER
   }, {
     sequelize,

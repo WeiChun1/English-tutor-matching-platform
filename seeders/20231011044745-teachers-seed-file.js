@@ -5,13 +5,15 @@ const bcrypt = require('bcryptjs')
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     let teachers = []
+    
     for(let i = 0; i < 15; i++){
-      let days = []
       teachers.push({
         name: faker.name.findName(),
         email: `user${i + 6}@example.com`,
         password: await bcrypt.hash('12345678', 10),
         nation: faker.address.country(),
+        avg_score: Math.round( Math.random() * 4 + 1),
+        comment_amount: Math.ceil(Math.random() * 20),
         avatar: `https://xsgames.co/randomusers/assets/avatars/male/${Math.ceil(Math.random() * 50)}.jpg`,
         teach_style: faker.lorem.paragraph(),
         introdution: faker.lorem.paragraph(),
