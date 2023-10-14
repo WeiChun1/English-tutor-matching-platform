@@ -14,6 +14,7 @@ module.exports = {
     for (let temp = 0; temp < teachers.length; temp ++){
       let days = []
       const startTime = time[Math.floor(Math.random() * time.length)]
+      const usage_temp = usage_time[Math.floor(Math.random() * usage_time.length)]
       const teacher_id = teachers[temp].id
       for (let i = 0; i < Math.ceil(Math.random() * 2) + 2; i++) {
         for (let n = 0; n < i; n++) {
@@ -40,7 +41,7 @@ module.exports = {
             linK: faker.internet.url(),
             teacher_id,
             start_time: realStartTime,
-            usage_time: usage_time[Math.floor(Math.random() * usage_time.length)],
+            usage_time: usage_temp,
             created_at: new Date(),
             updated_at: new Date()
           })

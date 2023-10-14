@@ -1,4 +1,4 @@
-const {Student, Teacher} = require('../models')
+const {Student, Teacher, Lesson} = require('../models')
 const bcrypt = require('bcryptjs')
 const { getOffset, getPagination } = require('../helpers/pagination-helper')
 const userServices = {
@@ -41,13 +41,12 @@ const userServices = {
       Teacher.findAll({ raw: true })
     ])
     .then(([teachers, students, allTeacher]) => {
-      console.log(teachers)
       teachers.rows.map((teacher) => {
         if (teacher.teachStyle.length > 50){
           teacher.teachStyle = teacher.teachStyle.substring(0, 50) + '...'
         }
       })
-      const keywords = req.query.keyword
+      let keywords = req.query.keyword
           if (keywords) { 
             const keyword = req.query.keyword.trim().toLowerCase()
             const filterTeachersData = allTeacher.filter(data => data.name.toLowerCase().includes(keyword))
@@ -57,6 +56,7 @@ const userServices = {
                 filterTeachersData[i].teachStyle = filterTeachersData[i].teachStyle.substring(0, 50) + '...'
               }
             }
+            keywords = keywords.trim()
             teachers.rows = filterTeachersData.slice(offset, offset + limit)
             teachers.count = filterTeachersData.length
           }
@@ -69,5 +69,31 @@ const userServices = {
     })
     .catch(err => cb(err))
   },
+  editUser: (req, cb) => {
+    const { name, introdution } = req.body
+    Student.findOne({ where: {id: req.user.id} })
+      .then(student => {
+        return student.update({
+          name,
+          introdution
+        })
+      })
+      .then(student => cb(null, student))
+      .catch(err => cb(err))
+  },
+  teacherPage: (req, cb) => {
+    Teacher.findAll({
+        include: Lesson,
+        where: {id : req.params.id},
+        raw: true,
+        nest: true
+      })
+      .then(teacher => {
+        if(!teacher) throw new Error('查無此老師')
+        console.log(teacher)
+        cb(null, teacher)    
+      })
+      .catch(err => cb(err))
+  }
 }
 module.exports = userServices

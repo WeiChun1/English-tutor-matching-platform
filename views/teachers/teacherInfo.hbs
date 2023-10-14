@@ -5,6 +5,7 @@
   <form action="/teachers" method="POST">
   {{else}}
   <form action="/teachers/edit?_method=PUT" method="POST">
+  <input type="text" class="form-control" id="name" name="name" value='{{user.name}}' style="width: 300px;" />
   {{/unless}}
     <div class="my-5">
       <label for="introdution" class="form-label">Your Introdution<span class="text-danger">*</span></label>
@@ -73,7 +74,7 @@
       <button type="submit" class="btn btn-primary">
         成為老師
       </button>
-      <a href="/">
+      <a href="/tutor">
         <button type="button" class="btn btn-outline-secondary">
           返回首頁
         </button>
@@ -88,7 +89,7 @@
   const startTime = document.getElementById("startTime")
   const result = document.getElementById("usageTime") 
   const checkbox = document.getElementsByName('days')
-
+  //想辦法把已選的日期塞進去
   //for(let i = 0; i < 7; i++){
   // console.log(123)
   //  for(let n = 0; n < {{lesson.days.length}}; n++){

@@ -13,8 +13,8 @@ module.exports = {
         password: await bcrypt.hash('12345678', 10),
         nation: faker.address.country(),
         avatar: `https://xsgames.co/randomusers/assets/avatars/male/${Math.ceil(Math.random() * 50)}.jpg`,
-        teach_style: faker.lorem.text(),
-        introdution: faker.lorem.text(),
+        teach_style: faker.lorem.paragraph(),
+        introdution: faker.lorem.paragraph(),
         created_at: new Date(),
         updated_at: new Date()
       })

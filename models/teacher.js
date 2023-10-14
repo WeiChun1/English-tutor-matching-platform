@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Teacher.hasMany(models.Lesson, { foreignKey: 'studnetId' })
+      Teacher.hasMany(models.Lesson, { foreignKey: 'teacherId' })
     }
-  };
+  }
   Teacher.init({
     name: DataTypes.STRING,
     email: DataTypes.STRING,

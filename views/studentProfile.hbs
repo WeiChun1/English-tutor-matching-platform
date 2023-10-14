@@ -1,0 +1,95 @@
+<div class="container my-3">
+  <div class="row no-gutters">
+    <div class="col-md-3">
+      <img class="img-responsive center-block mb-6" src="{{user.avatar}}"
+        style="width: 300px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;" />
+      <h1 class="my-5">{{user.name}}</h1>
+      <h4 class="my-5">nation: {{user.nation}}</h4>
+      <h3>About Me</h3>
+      <h5>{{user.introdution}}</h5>
+    </div>
+    <div class="col-md-9">
+      <h3>New Schedule</h3>
+      <div class="row d-flex justify-content-evenly my-5" style="height: 150px">
+        <div class="card col-5 bg-light">
+          <div class="card-body">
+            {{!-- 新預約 --}}
+          </div>
+        </div>
+        <div class="card col-5 bg-light">
+          <div class="card-body ">
+            {{!-- 新預約 --}}
+          </div>
+        </div>
+      </div>
+      <h3 class="mb-3">Lesson History</h3>
+      <div class="row d-flex justify-content-evenly my-5" style="height: 75px">
+        <div class="col-1 bg-primary rounded-circle"><img src="" alt=""></div>
+        <div class="card col-4 bg-light mb-3">
+          <div class="card-body p-3">
+            {{!-- 新預約 --}}
+            <div class="text-end">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >
+                Score 
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 bg-primary rounded-circle"><img src="" alt=""></div>
+        <div class="card col-4 bg-light">
+          <div class="card-body p-3">
+            {{!-- 新預約 --}}
+            <div class="text-end">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                Score
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-flex justify-content-evenly my-5" style="height: 75px">
+        <div class="col-1 bg-primary rounded-circle"><img src="" alt=""></div>
+        <div class="card col-4 bg-light">
+          <div class="card-body">
+            {{!-- 新預約 --}}
+          </div>
+        </div>
+        <div class="col-1 bg-primary rounded-circle"><img src="" alt=""></div>
+        <div class="card col-4 bg-light">
+          <div class="card-body ">
+            {{!-- 新預約 --}}
+          </div>
+        </div>
+      </div>
+
+      <h1 class="my-5-3">我的學習時數名次: 1</span></h1>
+      <div class="text-end">
+        <a class="btn btn-primary mt-5" href="/edit">edit</a>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form action="/edit?_method=PUT" method="POST">
+          <h5>分享此次的課程體驗</h5>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Score:</label>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label">Comment:</label>
+            <textarea class="form-control" id="message-text"></textarea>
+          </div>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

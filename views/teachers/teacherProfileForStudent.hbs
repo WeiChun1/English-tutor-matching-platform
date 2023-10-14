@@ -1,0 +1,56 @@
+<div class="container my-3">
+  <div class="row no-gutters">
+    <div class="col-md-9">
+      <div class="row mb-3">
+        <div class="col-6">
+          <img class="img-responsive center-block mb-6" src="{{teacher.[0].avatar}}"
+            style="width: 300px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;" />
+        </div>
+        <div class="col-6 mt-5">
+          <h1 class="my-5">{{teacher.[0].name}}</h1>
+          <h4>nation: {{teacher.[0].nation}}</h4>
+          <h4 class="mb-5">score: {{teacher.[0].avgScore}}</h4>
+        </div>
+      </div>
+      
+      <h3>About Me</h3>
+      <h5 class="mb-5">{{teacher.[0].introdution}}</h5>
+      <h3 >Your Teachstyle</h3>
+      <h5 class="mb-5">{{teacher.[0].teachStyle}}</h5>
+      <h3 class="mb-3">Recent Reviewed</h3>
+      <div class="row d-flex justify-content-evenly my-5" style="height: 50px">
+        <div class="col-1"><span class=" bg-warning p-2 rounded-circle">4.8</span></div>
+        <div class="card col-11 bg-light mb-5">
+          <div class="card-body">
+            {{!-- 新預約 --}}
+          </div>
+        </div>
+        <div class="col-1"><span class=" bg-warning p-2 rounded-circle">4.8</span></div>
+        <div class="card col-11 bg-light mb-5">
+          <div class="card-body ">
+            {{!-- 新預約 --}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 position-relative">
+      <h3 class="bg-secondary p-3 rounded-3 mb-3">預約上課</h3>
+      <form action="/select" method="post">
+        <select type="date" id="startTime" name="startTime" class="form-select" aria-label="Default select example"
+           required>
+          {{#each teacher}}
+            <option value="{{this.Lessons.startTime}}">{{this.Lessons.startTime}}</option>
+          {{/each}}
+        </select>
+        <div class="text-end mt-3"><button type="submit" class="btn btn-primary m-1">submit</button></div>
+      </form>
+      <div class="position-absolute bottom-0 end-0">
+        <a href="/tutor" >
+          <button type="button" class="btn btn-outline-secondary">
+            返回首頁
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

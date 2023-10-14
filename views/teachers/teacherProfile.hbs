@@ -1,0 +1,50 @@
+<div class="container my-3">
+  <div class="row no-gutters">
+    <div class="col-md-3">
+      <img class="img-responsive center-block mb-6" src="{{user.avatar}}"
+        style="width: 300px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;"/>
+      <h1 class="my-5">{{user.name}}</h1>
+      <h4>nation: {{user.nation}}</h4>
+      <h4 class="mb-5">score: {{user.avgScore}}</h4>
+      <h3>About Me</h3>
+      <h5>{{user.introdution}}</h5>
+    </div>
+    <div class="col-md-9">
+        <h3>New Schedule</h3>
+        <div class="row d-flex justify-content-evenly my-5" style="height: 150px"> 
+          <div class="card col-5 bg-light">
+            <div class="card-body">
+              {{!-- 新預約 --}}
+            </div>
+          </div>
+          <div class="card col-5 bg-light">
+            <div class="card-body ">
+              {{!-- 新預約 --}}
+            </div>
+          </div>
+        </div>
+        <h3 class="mb-3">Your Teachstyle</h3>
+        <h5 class="my-5">{{user.teachStyle}}</h5>
+        <h3 class="mb-3">Recent Reviewed</h3>
+        <div class="row d-flex justify-content-evenly my-5" style="height: 50px">
+          <div class="col-1"><span class=" bg-warning p-2 rounded-circle">4.8</span></div>
+          <div class="card col-11 bg-light mb-5">
+            <div class="card-body">
+              {{!-- 新預約 --}}
+            </div>
+          </div>
+          <div class="col-1"><span class=" bg-warning p-2 rounded-circle">4.8</span></div>
+          <div class="card col-11 bg-light mb-5">
+            <div class="card-body ">
+              {{!-- 新預約 --}}
+            </div>
+          </div>
+        </div>
+        {{#if user.teachStyle}}
+        <div class="text-end">
+          <a class="btn btn-primary mt-5" href="/teachers/edit">edit</a>
+        </div>
+        {{/if}}
+    </div>
+  </div>
+</div>

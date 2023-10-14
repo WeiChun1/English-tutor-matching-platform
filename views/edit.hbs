@@ -1,0 +1,26 @@
+{{>messages}}
+<h1 class="mb-5 restaurant-show-title">個人資料</h1>
+<div class="container">
+  <form action="/edit?_method=PUT" method="POST">
+    <input type="text" class="form-control" id="name" name="name" value='{{user.name}}' style="width: 300px;" />
+
+    <div class="my-5">
+      <label for="introdution" class="form-label">Your Introdution<span class="text-danger">*</span></label>
+      <textarea class="form-control" id="introdution" rows="5" name="introdution" placeholder="please intoduce yourself"
+        required>{{user.introdution}}</textarea>
+    </div>
+
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary">
+        完成編輯
+      </button>
+      <a href="/tutor">
+        <button type="button" class="btn btn-outline-secondary">
+          返回首頁
+        </button>
+      </a>
+      {{! 使用type="reset" 可以清除/還原輸入 }}
+      <button type="reset" class="btn btn-outline-danger">重新輸入</button>
+    </div>
+  </form>
+</div>

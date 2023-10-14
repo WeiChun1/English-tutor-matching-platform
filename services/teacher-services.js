@@ -53,27 +53,23 @@ const teacherServices = {
     })
       .then((lessons) => {
         let days = []
-        console.log(lessons[0])
         if(!lessons) throw new Error('查無此老師')
         lessons.map(lesson => {
           let day = lesson.startTime.getDay()
           days.push(day)
         })
         days = days.filter((day, index) => (days.indexOf(day) === index))
-      
         lessons[0].startTime = `${{ ...lessons[0] }.startTime.getHours()}:${{ ...lessons[0] }.startTime.getMinutes()}`
-        console.log(lessons[0].startTime)
         cb(null, { ...lessons[0], days})
       })
       .catch(err => cb(err))
   },
   editTeacher: (req, cb) => {
-    const { startTime, introdution, teachStyle, usageTime, link, days } = req.body
+    const { startTime, introdution, teachStyle, usageTime, link, days, name } = req.body
     if (!days) throw new Error("請至少選擇一日")
 
     Lesson.findAll({ where: { teacherId: req.user.id } })
       .then(Lessons => {
-        console.log(Lessons)
         if (!Lessons) throw new Error("尚未開課程")
         for(let i = 0; i < Lessons.length; i ++){
           Lessons[i].destroy()
@@ -102,16 +98,20 @@ const teacherServices = {
               teacherId: req.user.id
             })
           }),
-          Teacher.findOne({ where: { id: req.user.id } })
+          Teacher.findOne({ 
+            where: { id: req.user.id },
+          })
             .then(teacher => {
-              teacher.update({
+              return teacher.update({
                 ...req.user,
+                name,
                 teachStyle,
                 introdution
               })
             })
         ])
           .then(([lessons, teacher]) => {
+            //console.log(JSON.stringify(teacher))
             cb(null, {lessons, teacher})
           })
       })

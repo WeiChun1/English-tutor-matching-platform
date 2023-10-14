@@ -21,7 +21,7 @@ const userController = {
     if(req.user.teachStyle){
       res.render('teachers/teacherProfile')
     }else{
-      res.render('profile')
+      res.render('studentProfile')
     }
   },
   logout: (req, res) => {
@@ -32,8 +32,17 @@ const userController = {
   indexPage: (req, res, next) => {
     userServices.indexPage(req, (err, data) => err ? next(err) : res.render(('index'), data))
   },
-  searchTeacher: (req, res, next) => {
-    userServices.searchTeacher(req, (err, data) => err ? next(err) : res.render(('search'), data))
+  profileEdit: (req, res, next) => {
+    res.ren
+  },
+  editPage: (req, res) => {
+    res.render("edit")
+  },
+  editUser: (req, res) => {
+    userServices.editUser(req, (err, data) => err ? next(err) : res.redirect('/profile'))
+  },
+  teacherPage: (req, res) => {
+    userServices.teacherPage(req, (err, data) => err ? next(err) : res.render('teachers/teacherProfileForStudent',  {teacher: data}))
   }
 }
 module.exports = userController
