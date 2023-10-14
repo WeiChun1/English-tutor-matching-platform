@@ -35,14 +35,15 @@ const userController = {
   profileEdit: (req, res, next) => {
     res.ren
   },
-  editPage: (req, res) => {
-    res.render("edit")
-  },
+  editPage: (req, res) => { res.render("edit") },
   editUser: (req, res) => {
     userServices.editUser(req, (err, data) => err ? next(err) : res.redirect('/profile'))
   },
   teacherPage: (req, res) => {
     userServices.teacherPage(req, (err, data) => err ? next(err) : res.render('teachers/teacherProfileForStudent',  {teacher: data}))
+  },
+  selectLesson: (req, res) => {
+    userServices.selectLesson(req, (err, data) => err ? next(err) : 123)
   }
 }
 module.exports = userController

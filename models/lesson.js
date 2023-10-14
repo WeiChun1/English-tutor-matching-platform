@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     startTime: DataTypes.DATE,
     usageTime: DataTypes.INTEGER,
     link: DataTypes.STRING,
-    seleted: DataTypes.BOOLEAN,
+    selected: DataTypes.BOOLEAN,
     studnetId: DataTypes.INTEGER,
     teacherId: DataTypes.INTEGER
   }, {

@@ -1,6 +1,9 @@
 const {Student, Teacher, Lesson} = require('../models')
 const bcrypt = require('bcryptjs')
 const { getOffset, getPagination } = require('../helpers/pagination-helper')
+const moment = require('moment')
+moment.suppressDeprecationWarnings = true;
+
 const userServices = {
   signUp: (req, cb) => {
     if (req.body.password !== req.body.passwordCheck){
@@ -90,10 +93,28 @@ const userServices = {
       })
       .then(teacher => {
         if(!teacher) throw new Error('查無此老師')
-        console.log(teacher)
         cb(null, teacher)    
       })
       .catch(err => cb(err))
+  },
+  selectLesson: (req, cb) => {
+    console.log(req.params.id)
+    Lesson.findOne({
+      where: { 
+        startTime: req.body.startTime,
+         teacherId: req.params.id 
+      }
+    })
+    .then(lesson => {
+      return lesson.update({
+        studnetId: req.user.id,
+        selected: true
+      })
+    })
+    .then(lesson => {
+      cb(null, lesson)
+    })
+    .catch(err => cb(err))
   }
 }
 module.exports = userServices

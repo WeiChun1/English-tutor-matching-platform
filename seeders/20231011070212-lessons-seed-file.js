@@ -16,6 +16,7 @@ module.exports = {
       const startTime = time[Math.floor(Math.random() * time.length)]
       const usage_temp = usage_time[Math.floor(Math.random() * usage_time.length)]
       const teacher_id = teachers[temp].id
+      const link = faker.internet.url()
       for (let i = 0; i < Math.ceil(Math.random() * 2) + 2; i++) {
         for (let n = 0; n < i; n++) {
           days.push(week[Math.floor(Math.random() * 7)])
@@ -38,7 +39,7 @@ module.exports = {
             realStartTime = helpers.addDays(realStartTime, 7);
           }
           lessons.push({
-            linK: faker.internet.url(),
+            link,
             teacher_id,
             start_time: realStartTime,
             usage_time: usage_temp,

@@ -35,14 +35,17 @@
     </div>
     <div class="col-md-3 position-relative">
       <h3 class="bg-secondary p-3 rounded-3 mb-3">預約上課</h3>
-      <form action="/select" method="post">
+      <form action="/select/{{teacher.[0].id}}" method="post">
         <select type="date" id="startTime" name="startTime" class="form-select" aria-label="Default select example"
            required>
+          <option value="" selected disabled>--請選擇時段--</option>
           {{#each teacher}}
+            {{#unless this.Lessons.selected}}
             <option value="{{this.Lessons.startTime}}">{{this.Lessons.startTime}}</option>
+            {{/unless}}
           {{/each}}
         </select>
-        <div class="text-end mt-3"><button type="submit" class="btn btn-primary m-1">submit</button></div>
+        <div class="text-end mt-3"><button type="submit" class="btn btn-primary m-1" id="timeSubmit" data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>submit</button></div>
       </form>
       <div class="position-absolute bottom-0 end-0">
         <a href="/tutor" >
@@ -54,3 +57,36 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <form action="/edit?_method=PUT" method="POST">
+          <h5>預約成功</h5>
+          <div class="mb-3">
+            <input type="text" class="form-control" id="time" value="">
+          </div>
+          <div class="mb-3">
+            <input type="text" class="form-control" id="teacherName" value="{{teacher.[0].name}}">
+          </div>
+          <div class="mb-3">
+            <input type="text" class="form-control" id="teacherName" value="{{teacher.[0].Lessons.link}}">
+          </div>
+          <a class="btn btn-primary" href="/teacherProfileForStudent/{{teacher.[0].id}}">Close</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  const startTime = document.getElementById("startTime")
+  const time = document.getElementById("time")
+  const timeSubmit = document.getElementById("timeSubmit")
+  startTime.addEventListener("change", (event) => {
+    time.value = event.target.value
+    timeSubmit.removeAttribute("disabled")
+  })
+</script>

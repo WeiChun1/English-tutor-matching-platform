@@ -20,7 +20,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      seleted: {
+      selected: {
         defaultValue: false,
         type: Sequelize.BOOLEAN
       },
