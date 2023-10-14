@@ -11,17 +11,16 @@
     </div>
     <div class="col-md-9">
         <h3>New Schedule</h3>
-        <div class="row d-flex justify-content-evenly my-5" style="height: 150px"> 
-          <div class="card col-5 bg-light">
-            <div class="card-body">
-              {{!-- 新預約 --}}
+        <div class="row d-flex justify-content-evenly my-5" style="height: 150px">
+          {{#each lesson}}
+            <div class="card col-5 bg-light">
+              <div class="card-body">
+                <div>Time: {{this.startTime}}</div>
+                <div>Student's Name: {{this.Student.name}}</div>
+                <div>Link: {{this.link}}</div>
+              </div>
             </div>
-          </div>
-          <div class="card col-5 bg-light">
-            <div class="card-body ">
-              {{!-- 新預約 --}}
-            </div>
-          </div>
+          {{/each}}
         </div>
         <h3 class="mb-3">Your Teachstyle</h3>
         <h5 class="my-5">{{user.teachStyle}}</h5>

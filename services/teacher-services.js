@@ -116,6 +116,22 @@ const teacherServices = {
           })
       })
       .catch(err => cb(err))
+  },
+  profilePage: (req, cb) => {
+    return Lesson.findAll({
+      where: { 
+        teacherId: req.user.id,
+        selected: true,
+      },
+      order: [['updated_at', 'DESC']],
+      raw: true,
+      nest: true,
+      include: Student
+    })
+    .then(lessons => {
+      cb(null, { lesson: lessons.slice(0,2)})
+    })
+    .catch(err => cb(err))
   }
 }
 module.exports = teacherServices

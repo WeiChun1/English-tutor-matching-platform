@@ -13,6 +13,9 @@ const teacherController = {
   },
   editTeacher: (req, res, next) => {
     teacherServices.editTeacher(req, (err, data) => err ? next(err) : res.redirect(`/profile`))
+  },
+  profilePage: (req, res, next) => {
+    teacherServices.profilePage(req, (err, data) => err ? next(err) : res.render('teachers/teacherProfile', data))
   }
 }
 module.exports = teacherController

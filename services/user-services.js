@@ -115,6 +115,9 @@ const userServices = {
       cb(null, lesson)
     })
     .catch(err => cb(err))
+  },
+  profilePage: (req, cb) => {
+    
   }
 }
 module.exports = userServices

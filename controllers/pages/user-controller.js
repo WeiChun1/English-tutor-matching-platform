@@ -17,12 +17,16 @@ const userController = {
   signIn: (req, res) => {
     res.redirect('/tutor')
   },
-  profilePage: (req, res) => {
-    if(req.user.teachStyle){
-      res.render('teachers/teacherProfile')
-    }else{
-      res.render('studentProfile')
-    }
+  profilePage: (req, res, next) => {
+    userServices.profilePage(req, (err, data) =>{
+      if (err) return next(err)
+      if (req.user.teachStyle) {
+        res.render('teachers/teacherProfile')
+      } else {
+        res.render('studentProfile')
+      }
+    })
+   
   },
   logout: (req, res) => {
     req.flash('success_messages', '登出成功！')
