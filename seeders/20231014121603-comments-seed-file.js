@@ -7,10 +7,11 @@ module.exports = {
       'SELECT id FROM Teachers;',
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     )
-    const students = await queryInterface.sequelize.query(
+    let students = await queryInterface.sequelize.query(
       'SELECT id FROM Students;',
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     )
+    students = students.slice(1)
     await teachers.map(teacher => {
       let students_id = []
       let temp = []
@@ -26,8 +27,8 @@ module.exports = {
         comments.push({
           score: Math.ceil(Math.random()*  5),
           content: faker.lorem.paragraph(),
-          studentId: students_id[i].id,
-          teacherId: teacher.id,
+          student_id: students_id[i].id,
+          teacher_id: teacher.id,
           created_at: new Date(),
           updated_at: new Date()
         })

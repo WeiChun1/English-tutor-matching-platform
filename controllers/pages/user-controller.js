@@ -20,11 +20,7 @@ const userController = {
   profilePage: (req, res, next) => {
     userServices.profilePage(req, (err, data) =>{
       if (err) return next(err)
-      if (req.user.teachStyle) {
-        res.render('teachers/teacherProfile')
-      } else {
-        res.render('studentProfile')
-      }
+      res.render('studentProfile')
     })
    
   },

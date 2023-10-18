@@ -1,4 +1,4 @@
-const {Student, Teacher, Lesson} = require('../models')
+const { Student, Teacher, Lesson, Comment } = require('../models')
 const bcrypt = require('bcryptjs')
 const { getOffset, getPagination } = require('../helpers/pagination-helper')
 const moment = require('moment')
@@ -85,15 +85,23 @@ const userServices = {
       .catch(err => cb(err))
   },
   teacherPage: (req, cb) => {
-    Teacher.findAll({
-        include: Lesson,
-        where: {id : req.params.id},
+    Promise.all([
+      Teacher.findAll({
+          include: Lesson,
+          where: {id : req.params.id},
+          raw: true,
+          nest: true
+        }),
+      Comment.findAll({
         raw: true,
-        nest: true
+        where:{ teacherId: req.params.id },
+        order: [['updated_at', 'DESC']]
       })
-      .then(teacher => {
+    ])
+      .then(([teacher, comments]) => {
+        
         //設定此老師開始與結束時間
-        let lessonTime
+        let lessonTimes = []
         for(let i = 0; i < teacher.length; i++){
           const time_temp = teacher[i].Lessons.startTime
           const usageTime = teacher[i].Lessons.usageTime 
@@ -107,18 +115,18 @@ const userServices = {
           } else (
             lessonTime += `-${time_temp.getHours()}:${time_temp.getMinutes() + 30}:00`
           )
+          lessonTimes.push(lessonTime)
+          teacher[i].lessonTime = lessonTime
         }
-        
         if(!teacher) throw new Error('查無此老師')
         cb(null, {
           teacher,
-          lessonTime
+          comments: comments.slice(0, 2)
         })    
       })
       .catch(err => cb(err))
   },
   selectLesson: (req, cb) => {
-    console.log(req.params.id)
     Lesson.findOne({
       where: { 
         startTime: req.body.startTime,

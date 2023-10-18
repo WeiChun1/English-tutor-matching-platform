@@ -1,4 +1,4 @@
-const { Student, Teacher, Lesson } = require('../models')
+const { Student, Teacher, Lesson, Comment } = require('../models')
 const helpers = require('../helpers/day-helpers')
 const teacherServices = {
   createTeacher: (req, cb) => {
@@ -49,7 +49,8 @@ const teacherServices = {
   editTeacherPage: (req, cb) => {
     Lesson.findAll({ 
       where: { teacherId : req.user.id},
-      raw: true
+      raw: true,
+      order: [['updated_at', 'DESC']]
     })
       .then((lessons) => {
         let days = []
@@ -65,18 +66,34 @@ const teacherServices = {
       .catch(err => cb(err))
   },
   editTeacher: (req, cb) => {
-    const { startTime, introdution, teachStyle, usageTime, link, days, name } = req.body
+    const { startTime, introdution, teachStyle, usageTime, link, name } = req.body
+    let { days } = req.body
     if (!days) throw new Error("請至少選擇一日")
 
-    Lesson.findAll({ where: { teacherId: req.user.id } })
+    Lesson.findAll({ 
+      where: { 
+        teacherId: req.user.id
+      }
+    })
       .then(Lessons => {
         if (!Lessons) throw new Error("尚未開課程")
-        for(let i = 0; i < Lessons.length; i ++){
-          Lessons[i].destroy()
-        }  
+        let days_temp = [days]
+        if(days.length > 1) days_temp = days
+        Lessons.map(Lesson => {
+          if (`${Lesson.startTime.getHours()}:${Lesson.startTime.getMinutes()}` !== startTime || Lesson.usageTime !== Number(usageTime)){
+            const day = Lesson.startTime.getDay()
+            //days_temp = days_temp.filter(a => a !== String(day))
+            if (!Lesson.selected && !days.includes(String(day))) {
+              Lesson.destroy()
+            }
+          } else if(!Lesson.selected) {
+              Lesson.destroy()
+          }
+        })
+        //days = days_temp
       })
       .then(() => {
-        Promise.all([
+        return Promise.all(
           Array.from({ length: 2 * days.length }, (_, index) => {
             let realStartTime = new Date()
             const timeTemp = startTime.split(":")
@@ -97,39 +114,61 @@ const teacherServices = {
               link,
               teacherId: req.user.id
             })
-          }),
-          Teacher.findOne({ 
-            where: { id: req.user.id },
           })
-            .then(teacher => {
-              return teacher.update({
-                ...req.user,
-                name,
-                teachStyle,
-                introdution
+        )
+          .then(() => {
+            let lesson_repeat = []
+            Promise.all([
+              Teacher.findOne({where: { id: req.user.id } }),
+              Lesson.findAll({ where: { teacherId: req.user.id }})
+            ])
+              .then(([teacher, lessons]) => {
+                lessons.map(lesson => {
+                  if (lesson_repeat.includes(lesson.startTime.getDate())) {
+                    lesson.destroy()
+                  } else {
+                    lesson_repeat.push(lesson.startTime.getDate())
+                  }
+                })
+                teacher.update({
+                  ...req.user,
+                  name,
+                  teachStyle,
+                  introdution
+                })
+                return {teacher, lessons}
               })
-            })
-        ])
-          .then(([lessons, teacher]) => {
-            cb(null, {lessons, teacher})
+              .then(({teacher, lessons}) => {
+                console.log(teacher, lessons)
+                cb(null, {  lessons, teacher })
+              })
           })
       })
       .catch(err => cb(err))
   },
   profilePage: (req, cb) => {
-    return Lesson.findAll({
-      where: { 
-        teacherId: req.user.id,
-        selected: true,
-      },
-      order: [['updated_at', 'DESC']],
-      raw: true,
-      nest: true,
-      include: Student
-    })
-    .then(lessons => {
-      console.log(lessons)
-      cb(null, { lesson: lessons.slice(0,2)})
+    return Promise.all([
+      Lesson.findAll({
+        where: {
+          teacherId: req.user.id,
+          selected: true,
+        },
+        order: [['updated_at', 'DESC']],
+        raw: true,
+        nest: true,
+        include: Student
+      }),
+      Comment.findAll({
+        where: { teacherId: req.user.id },
+        order: [['updated_at', 'DESC']],
+        raw: true,
+      })
+  ])
+    .then(([lessons, comments]) => {
+      cb(null, { 
+        lesson: lessons.slice(0,2),
+        comment: comments.slice(0,2)
+      })
     })
     .catch(err => cb(err))
   }
