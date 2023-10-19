@@ -20,9 +20,8 @@ const userController = {
   profilePage: (req, res, next) => {
     userServices.profilePage(req, (err, data) =>{
       if (err) return next(err)
-      res.render('studentProfile')
+      res.render('studentProfile', data)
     })
-   
   },
   logout: (req, res) => {
     req.flash('success_messages', '登出成功！')

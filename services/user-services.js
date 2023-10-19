@@ -1,6 +1,7 @@
-const { Student, Teacher, Lesson, Comment } = require('../models')
+const { Student, Teacher, Lesson } = require('../models')
 const bcrypt = require('bcryptjs')
 const { getOffset, getPagination } = require('../helpers/pagination-helper')
+const { startTimeSet } = require('../helpers/day-helpers')
 const moment = require('moment')
 moment.suppressDeprecationWarnings = true;
 
@@ -92,32 +93,30 @@ const userServices = {
           raw: true,
           nest: true
         }),
-      Comment.findAll({
+      Lesson.findAll({
         raw: true,
         where:{ teacherId: req.params.id },
         order: [['updated_at', 'DESC']]
       })
     ])
-      .then(([teacher, comments]) => {
+      .then(([teacher, lessons]) => {
         
         //設定此老師開始與結束時間
-        let lessonTimes = []
-        for(let i = 0; i < teacher.length; i++){
-          const time_temp = teacher[i].Lessons.startTime
-          const usageTime = teacher[i].Lessons.usageTime 
-          lessonTime = time_temp.toString().split(' GMT')[0]   
-          if (usageTime === 60 && time_temp.getMinutes() === 30) {
-            lessonTime += `-${time_temp.getHours() + 1}:${time_temp.getMinutes()}:00`
-          } else if (usageTime === 60 && time_temp.getMinutes() === 0) {
-            lessonTime += `-${time_temp.getHours() + 1}:${time_temp.getMinutes()}0:00`
-          }else if (usageTime === 30 && time_temp.getMinutes() === 30) {
-            lessonTime += `-${time_temp.getHours() + 1}:${time_temp.getMinutes() - 30}0:00`
-          } else (
-            lessonTime += `-${time_temp.getHours()}:${time_temp.getMinutes() + 30}:00`
-          )
-          lessonTimes.push(lessonTime)
-          teacher[i].lessonTime = lessonTime
+        for (let i = 0; i < teacher.length; i++) {
+          const startTime = teacher[i].Lessons.startTime
+          const usageTime = teacher[i].Lessons.usageTime
+          teacher[i].lessonTime = startTimeSet(startTime, usageTime)
         }
+        let comments = []
+        let score = []
+        lessons.map(lesson => {
+          if(lesson.comment){
+            comments.push({
+              content: lesson.comment,
+              score: lesson.score
+            })
+          }
+        })
         if(!teacher) throw new Error('查無此老師')
         cb(null, {
           teacher,
@@ -145,7 +144,27 @@ const userServices = {
     .catch(err => cb(err))
   },
   profilePage: (req, cb) => {
-
+    Promise.all([
+      Lesson.findAll({
+        where: { studentId: req.user.id },
+        order: [['updated_at', 'DESC']],
+        raw: true,
+        nest: true,
+        include: Teacher
+      })
+    ])
+      .then(([lessons]) => {
+        
+        let lessonUnscored = lessons.filter(lesson => !lesson.score).slice(0,4)
+        lessonUnscored.map(lesson => {
+          lesson.lessonTime = startTimeSet(lesson.startTime, lesson.usageTime)
+        })
+        cb(null, {
+          lesson: lessons.slice(0, 2),
+          lessonUnscored
+        })
+      })
+      .catch(err => cb(err))
   }
 }
 module.exports = userServices

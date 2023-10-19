@@ -90,7 +90,6 @@ const teacherServices = {
               Lesson.destroy()
           }
         })
-        //days = days_temp
       })
       .then(() => {
         return Promise.all(
@@ -165,6 +164,10 @@ const teacherServices = {
       })
   ])
     .then(([lessons, comments]) => {
+      lessons.map(lesson => {
+        lesson.lessonTime = helpers.startTimeSet(lesson.startTime, lesson.usageTime) 
+      })
+      console.log(lessons)
       cb(null, { 
         lesson: lessons.slice(0,2),
         comment: comments.slice(0,2)

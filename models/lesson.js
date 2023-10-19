@@ -21,7 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     link: DataTypes.STRING,
     selected: DataTypes.BOOLEAN,
     studentId: DataTypes.INTEGER,
-    teacherId: DataTypes.INTEGER
+    teacherId: DataTypes.INTEGER,
+    comment: DataTypes.TEXT,
+    score: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Lesson',
