@@ -55,8 +55,12 @@
         </ul>
       </nav>
     </div>
-    <div class="col-md-2 col-3 mx-auto">
-      
+    <div class="col-md-2 col-3 mx-auto border border-dark p-3">
+      <h4 class="mb-3">學習時數總排行</h4>
+      {{#each students}}
+        <img src="{{this.avatar}}" alt="" style="width: 50%;">
+        <div class="mb-3">No.{{this.rank}}  {{this.name}}</div>
+      {{/each}}
     </div>
   </div>
 </div>

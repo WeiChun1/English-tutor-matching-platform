@@ -16,6 +16,7 @@ router.get('/logout', userController.logout)
 router.get('/edit', authenticated, userController.editPage)
 router.put('/edit', authenticated, userController.editUser)
 router.get('/teacherProfileForStudent/:id', authenticated, userController.teacherPage)
+router.post('/newComment', authenticated, userController.newComment)
 router.get('/tutor', authenticated, userController.indexPage)
 router.post('/select/:id', authenticated, userController.selectLesson)
 module.exports = router

@@ -32,10 +32,6 @@ module.exports = {
       teach_style: {
         type: Sequelize.TEXT
       },
-      avg_score: {
-        defaultValue: 0,
-        type: Sequelize.INTEGER
-      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

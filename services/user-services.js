@@ -41,10 +41,18 @@ const userServices = {
         limit,
         raw: true 
       }),
-      Student.findAll({ raw: true }),
+      Student.findAll({
+        raw: true,
+        order: [["learning_time", "DESC"]]
+      }),
       Teacher.findAll({ raw: true })
     ])
     .then(([teachers, students, allTeacher]) => {
+      for(let index = 0; index < students.length; index++){
+        students[index].rank = index + 1
+      }
+      //把root先移除
+      students = students.slice(0, -1)
       teachers.rows.map((teacher) => {
         if (teacher.teachStyle.length > 50){
           teacher.teachStyle = teacher.teachStyle.substring(0, 50) + '...'
@@ -67,6 +75,7 @@ const userServices = {
       
       cb(null, {
         teachers: teachers.rows,
+        students: students.slice(0,5),
         keywords,
         pagination: getPagination(limit, page, teachers.count)
       })
@@ -100,7 +109,6 @@ const userServices = {
       })
     ])
       .then(([teacher, lessons]) => {
-        
         //設定此老師開始與結束時間
         for (let i = 0; i < teacher.length; i++) {
           const startTime = teacher[i].Lessons.startTime
@@ -108,15 +116,19 @@ const userServices = {
           teacher[i].lessonTime = startTimeSet(startTime, usageTime)
         }
         let comments = []
-        let score = []
+        teacher.avgScore = 0
+        teacher.commentAmount = 0
         lessons.map(lesson => {
           if(lesson.comment){
+            teacher.avgScore = (lesson.score + (teacher.avgScore * teacher.commentAmount)) / (teacher.commentAmount + 1)
+            teacher.commentAmount++
             comments.push({
               content: lesson.comment,
-              score: lesson.score
+              score: lesson.score,
             })
           }
         })
+        teacher.avgScore = teacher.avgScore.toFixed(1)
         if(!teacher) throw new Error('查無此老師')
         cb(null, {
           teacher,
@@ -151,20 +163,51 @@ const userServices = {
         raw: true,
         nest: true,
         include: Teacher
+      }),
+      Student.findAll({
+        raw: true,
+        order: [["learning_time", "DESC"]]
       })
     ])
-      .then(([lessons]) => {
-        
-        let lessonUnscored = lessons.filter(lesson => !lesson.score).slice(0,4)
-        lessonUnscored.map(lesson => {
+      .then(([lessons, students]) => {
+        let rank = students.findIndex( student => student.id === req.user.id)
+        lessons.map(lesson => {
           lesson.lessonTime = startTimeSet(lesson.startTime, lesson.usageTime)
         })
+        let lessonUnscored = lessons.filter(lesson => !lesson.score)
+        lessonUnscored = lessonUnscored.filter(lesson => new Date() - lesson.startTime > 0)
+
+        if (lessonUnscored.length > 4) {
+          lessonUnscored.slice(0, 4)
+        }
         cb(null, {
           lesson: lessons.slice(0, 2),
-          lessonUnscored
+          lessonUnscored,
+          rank: rank + 1
         })
       })
       .catch(err => cb(err))
+  },
+  newComment: (req, cb) => {
+    const { score, comment, time } = req.body
+    const startTime = new Date(time.split('-')[0])
+    if (!startTime) {
+      throw new Error('查無此課程')
+    }
+    Lesson.findOne({
+      where: { startTime }
+    })
+    .then(lesson => {
+      if (!lesson) {
+        throw new Error('查無此課程')
+      }
+      lesson.update({
+        score,
+        comment
+      })
+      cb(null, lesson)
+    })
+    .catch(err => cb(err))
   }
 }
 module.exports = userServices

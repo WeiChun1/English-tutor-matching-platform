@@ -43,6 +43,13 @@ const userController = {
   },
   selectLesson: (req, res, next) => {
     userServices.selectLesson(req, (err, data) => err ? next(err) : 123)
+  },
+  newComment: (req, res, next) => {
+    userServices.newComment(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_messages', '評論成功')
+      return res.redirect('/profile')
+    })
   }
 }
 module.exports = userController
