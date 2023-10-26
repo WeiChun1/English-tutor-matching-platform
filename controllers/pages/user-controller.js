@@ -42,7 +42,7 @@ const userController = {
     userServices.teacherPage(req, (err, data) => err ? next(err) : res.render('teachers/teacherProfileForStudent',  data))
   },
   selectLesson: (req, res, next) => {
-    userServices.selectLesson(req, (err, data) => err ? next(err) : 123)
+    userServices.selectLesson(req, (err, data) => {if(err) return next(err)})
   },
   newComment: (req, res, next) => {
     userServices.newComment(req, (err, data) => {

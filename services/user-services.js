@@ -145,8 +145,9 @@ const userServices = {
       }
     })
     .then(lesson => {
+      if (!lesson || lesson.selected) throw new Error('查無此課程或此刻已被選取')
       return lesson.update({
-        studnetId: req.user.id,
+        studentId: req.user.id,
         selected: true
       })
     })
@@ -191,16 +192,12 @@ const userServices = {
   newComment: (req, cb) => {
     const { score, comment, time } = req.body
     const startTime = new Date(time.split('-')[0])
-    if (!startTime) {
-      throw new Error('查無此課程')
-    }
+    if (!startTime) throw new Error('查無此課程')
     Lesson.findOne({
       where: { startTime }
     })
     .then(lesson => {
-      if (!lesson) {
-        throw new Error('查無此課程')
-      }
+      if (!lesson) throw new Error('查無此課程')
       lesson.update({
         score,
         comment

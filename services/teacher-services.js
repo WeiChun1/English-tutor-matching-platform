@@ -146,8 +146,7 @@ const teacherServices = {
       .catch(err => cb(err))
   },
   profilePage: (req, cb) => {
-    return Promise.all([
-      Lesson.findAll({
+    Lesson.findAll({
         where: {
           teacherId: req.user.id,
           selected: true,
@@ -156,18 +155,19 @@ const teacherServices = {
         raw: true,
         nest: true,
         include: Student
-      }),
-      Comment.findAll({
-        where: { teacherId: req.user.id },
-        order: [['updated_at', 'DESC']],
-        raw: true,
-      })
-  ])
-    .then(([lessons, comments]) => {
+    })
+    .then((lessons) => {
+      let comments = []
       lessons.map(lesson => {
-        lesson.lessonTime = helpers.startTimeSet(lesson.startTime, lesson.usageTime) 
+        lesson.lessonTime = helpers.startTimeSet(lesson.startTime, lesson.usageTime)
+        if (lesson.comment) {
+          comments.push({
+            content: lesson.comment,
+            score: lesson.score
+          })
+        }
       })
-      console.log(lessons)
+      lessons = lessons.filter(lesson => (lesson.startTime - new Date()) > 0)
       cb(null, { 
         lesson: lessons.slice(0,2),
         comment: comments.slice(0,2)
