@@ -1,4 +1,3 @@
-const { Student, Teacher, Lesson } = require('../../models')
 const teacherServices = require('../../services/teacher-services')
 
 const teacherController = {

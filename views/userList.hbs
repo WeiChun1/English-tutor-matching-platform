@@ -1,0 +1,22 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">name</th>
+      <th scope="col">是否成為老師</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each users}}
+    <tr>
+      <th scope="row">{{this.id}}</th>
+      <td>{{this.name}}</td>
+      {{#if this.teachStyle}}
+      <td>True</td>
+      {{else}}
+      <td>False</td>
+      {{/if}}
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

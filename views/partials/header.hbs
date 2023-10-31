@@ -21,6 +21,11 @@
             <a href="/teachers" class="nav-link">成為老師</a>
           </li>
           {{/ifCond}}
+          {{#if user.isAdmin}}
+          <li class="nav-item">
+            <a href="/admin" class="nav-link">使用者清單</a>
+          </li>
+          {{/if}}
           <li class="nav-item position-absolute top-50 end-0 translate-middle-y me-4">
             <a href="/logout"><button class="btn btn-outline-success my-sm-0 my-2">Logout</button></a>
           </li>

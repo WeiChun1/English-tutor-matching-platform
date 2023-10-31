@@ -9,7 +9,7 @@ const authenticated = (req, res, next) => {
 const authenticatedAdmin = (req, res, next) => {
   if (helpers.ensureAuthenticated(req)) {
     if (helpers.getUser(req).isAdmin) return next()
-    res.redirect('/')
+    res.redirect('/tutor')
   } else {
     req.flash('warning_msg', '無此權限！')
     res.redirect('/signin')
