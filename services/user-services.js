@@ -82,7 +82,7 @@ const userServices = {
     })
     .catch(err => cb(err))
   },
-  editUser: (req, cb) => {
+  editUserProfile: (req, cb) => {
     const { name, introdution } = req.body
     Student.findOne({ where: {id: req.user.id} })
       .then(student => {
