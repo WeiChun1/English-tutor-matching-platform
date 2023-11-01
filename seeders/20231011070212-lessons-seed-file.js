@@ -41,7 +41,7 @@ module.exports = {
         realStartTime.setHours(Number(random_startTime[0]), Number(random_startTime[1]), 0)
         realStartTime = helpers.addDays(realStartTime, random_day)
         student_id = students[Math.floor(Math.random() * (students.length - 1)) + 1].id
-        if (Math.random() < 0.5 || comment_amount < 2) {
+        if (Math.random() < 0.25 || comment_amount < 2) {
           comment = faker.lorem.paragraph()
           score = Math.ceil(Math.random() * 4 + 1)
         }

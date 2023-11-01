@@ -16,7 +16,7 @@ module.exports = {
       created_at: new Date(),
       updated_at: new Date()
     })
-    for (let i = 15; i < 35; i++) {
+    for (let i = 0; i < 15; i++) {
       students.push({
         name: faker.name.findName(),
         email: `user${i + 1}@example.com`,
@@ -29,11 +29,9 @@ module.exports = {
         updated_at: new Date()
       })
     }
-    //我原始的方法是直接把學生id帶到teacher所以不會有重複問題
-    //避免找資料時會有誤，所以我Students資料寫完刪掉再寫，這樣就不會有id重複的問題
+    
     await queryInterface.bulkInsert('Students', students)
-    await queryInterface.bulkDelete('Students', {})
-    await queryInterface.bulkInsert('Students', students)
+    
   },
 
   down: async (queryInterface, Sequelize) => {

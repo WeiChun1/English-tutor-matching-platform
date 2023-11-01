@@ -1,8 +1,11 @@
 const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy
+const LocalStrategy = require('passport-local')
+const passportJWT = require('passport-jwt')
 const bcrypt = require('bcryptjs')
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 const FacebookStrategy = require('passport-facebook').Strategy
+const JWTStrategy = passportJWT.Strategy
+const ExtractJWT = passportJWT.ExtractJwt
 const { Student, Teacher } = require('../models')
 // set up Passport strategy
 passport.use(new LocalStrategy(
@@ -22,12 +25,13 @@ passport.use(new LocalStrategy(
         // 因為分成兩個model 所以回傳時會是矩陣 找出有資料的那組
         user.map(user_temp => { if (user_temp) return user = user_temp })
         if (user[0] === null) user = null
-        if (!user) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤！'))
+        if (!user) throw new Error('帳號或密碼輸入錯誤！')
         bcrypt.compare(password, user.password).then(res => {
-          if (!res) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤！'))
+          if (!res) throw new Error('帳號或密碼輸入錯誤！')
           return cb(null, user)
         })
       })
+      .catch(err => cb(err))
   }
 ))
 passport.use(new FacebookStrategy({
@@ -90,6 +94,15 @@ passport.use(new GoogleStrategy({
       })
   }
 ))
+const jwtOptions = {
+  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET
+}
+passport.use(new JWTStrategy(jwtOptions, (jwtPayload, cb) => {
+  User.findByPk(jwtPayload.id)
+    .then(user => cb(null, user))
+    .catch(err => cb(err))
+}))
 // serialize and deserialize user
 passport.serializeUser((user, cb) => {
   cb(null, user.id)
