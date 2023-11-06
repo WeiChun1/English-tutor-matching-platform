@@ -1,18 +1,19 @@
 const { Student, Teacher, Lesson, Comment } = require('../models')
 const helpers = require('../helpers/day-helpers')
+const { getOffset, getPagination } = require('../helpers/pagination-helper')
 const teacherServices = {
   createTeacher: (req, cb) => {
     const { startTime, introdution, teachStyle, usageTime, link, days } = req.body
     if (!days) throw new Error("請至少選擇一日")
-    
-    Student.findOne({ where: { id: req.user.id } })
+    Student.findOne({ where: { id: req.user.id }})
       .then(Student => {
         if (!Student) throw new Error("已成為老師，如需更改資料請至個人資料")
         return Student.destroy()
       })
       .then(() => {
-        Promise.all([
+        return Promise.all([
           Array.from({ length: 2 * days.length }, (_, index) => {
+            
             let realStartTime = new Date()
             const timeTemp = startTime.split(":")
             const day = Number(days[Math.floor(index / 2)])
@@ -39,9 +40,11 @@ const teacherServices = {
             introdution
           })
         ])
-      
           .then(([lessons, teacher]) => {
-            cb(null, {lessons, teacher})
+            cb(null, {
+              ...teacher,
+              days
+            })
           })
       })
       .catch(err => cb(err))
@@ -66,7 +69,7 @@ const teacherServices = {
       .catch(err => cb(err))
   },
   editTeacher: (req, cb) => {
-    const { startTime, introdution, teachStyle, usageTime, link, name } = req.body
+    const { startTime, introdution, teachStyle, usageTime, link, name, email, password, avatar } = req.body
     let { days } = req.body
     if (!days) throw new Error("請至少選擇一日")
 
@@ -111,7 +114,7 @@ const teacherServices = {
               startTime: realStartTime,
               usageTime,
               link,
-              teacherId: req.user.id
+              teacherId: req.user.id,
             })
           })
         )
@@ -133,12 +136,14 @@ const teacherServices = {
                   ...req.user,
                   name,
                   teachStyle,
-                  introdution
+                  introdution,
+                  email, 
+                  password, 
+                  avatar
                 })
                 return {teacher, lessons}
               })
               .then(({teacher, lessons}) => {
-                console.log(teacher, lessons)
                 cb(null, {  lessons, teacher })
               })
           })
@@ -146,6 +151,7 @@ const teacherServices = {
       .catch(err => cb(err))
   },
   profilePage: (req, cb) => {
+    const {email, name, avatar, introdution} = req.user
     Lesson.findAll({
         where: {
           teacherId: req.user.id,
@@ -158,20 +164,60 @@ const teacherServices = {
     })
     .then((lessons) => {
       let comments = []
+      let lessonsInfo = []
+      let avgScore = 0
+      let commentAmount = 0
       lessons.map(lesson => {
         lesson.lessonTime = helpers.startTimeSet(lesson.startTime, lesson.usageTime)
         if (lesson.comment) {
+          avgScore = (lesson.score + (avgScore * commentAmount)) / (commentAmount + 1)
+          commentAmount++
           comments.push({
+            name: lesson.Student.name,
             content: lesson.comment,
             score: lesson.score
           })
         }
       })
+      avgScore = avgScore.toFixed(1)
       lessons = lessons.filter(lesson => (lesson.startTime - new Date()) > 0)
+      const lessons_7Days = lessons.filter(lesson => (lesson.startTime.getDate() - new Date().getDate()) <= 7 )
+      lessons_7Days.map(lesson => {
+        lessonsInfo.push({
+          name: lesson.Student.name,
+          startTime: lesson.lessonTime
+        })
+      })
       cb(null, { 
+        information: { 
+          email,
+          name, 
+          avatar, 
+          avgScore, 
+          introdution,
+          comments,
+          lessonsInfo
+        },
         lesson: lessons.slice(0,2),
         comment: comments.slice(0,2)
       })
+    })
+    .catch(err => cb(err))
+  },
+  getAllLesson: (req, cb) => {
+    const DEFAULT_LIMIT = 6
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || DEFAULT_LIMIT
+    const offset = getOffset(limit, page)
+    Lesson.findAll({
+      offset,
+      limit,
+      where: { teacherId: req.user.id },
+      raw: true
+    })
+    .then(lessons => {
+      if(!lessons) throw new Error('尚未有課程紀錄')
+      cb(null, lessons)
     })
     .catch(err => cb(err))
   }

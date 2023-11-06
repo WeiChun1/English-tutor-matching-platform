@@ -70,7 +70,6 @@ passport.use(new GoogleStrategy({
 },
   function (accessToken, refreshToken, profile, cb) {
     const { name, email } = profile._json
-    console.log(name, email)
     Promise.all([
       Student.findOne({ where: { email } }),
       Teacher.findOne({ where: { email } })
@@ -99,8 +98,15 @@ const jwtOptions = {
   secretOrKey: process.env.JWT_SECRET
 }
 passport.use(new JWTStrategy(jwtOptions, (jwtPayload, cb) => {
-  User.findByPk(jwtPayload.id)
-    .then(user => cb(null, user))
+  Promise.all([
+    Student.findByPk(jwtPayload.id),
+    Teacher.findByPk(jwtPayload.id)
+  ])
+    .then((user) => {
+      user.map(user_temp => { if (user_temp) return user = user_temp })
+      if (user[0] === null) user = null
+      cb(null, user.toJSON())
+    })
     .catch(err => cb(err))
 }))
 // serialize and deserialize user

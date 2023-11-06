@@ -3,13 +3,21 @@ const jwt = require('jsonwebtoken')
 const userController = {
   signUp: (req, res, next) => {
     userServices.signUp(req, (err, data) => {
-      if (err) return next(err)
-      req.flash('success_messages', '成功註冊帳號！')
-      req.session.createdData = data
-      return res.redirect('/signin')
+      if(err) next(err)
+      try {
+        const userData = data.toJSON()
+        delete userData.password
+        res.json({
+          status: 'success',
+          userData
+        })
+      } 
+      catch (err) {
+        next(err)
+      }
     })
   },
-  signIn: (req, res, next) => {   
+  signIn: (req, res, next) => {
     try {
       const userData = req.user.toJSON()
       delete userData.password
@@ -26,35 +34,70 @@ const userController = {
     }
   },
   profilePage: (req, res, next) => {
-    userServices.profilePage(req, (err, data) =>{
-      if (err) return next(err)
-      res.render('studentProfile', data)
-    })
+    userServices.profilePage(req, (err, data) => err ? next(err) : res.json({ status: 'success', information: data.information}))
   },
   logout: (req, res) => {
-    req.flash('success_messages', '登出成功！')
     req.logout()
-    res.redirect('/signin')
+    res.json({
+      status: 'success'
+    })
   },
   indexPage: (req, res, next) => {
-    userServices.indexPage(req, (err, data) => err ? next(err) : res.json(data))
+    userServices.indexPage(req, (err, data) => err ? next(err) : res.json({
+      status: 'success',
+      teachers: data.teachers
+    }))
   },
-  editPage: (req, res) => { res.render("edit") },
   editUserProfile: (req, res) => {
-    userServices.editUserProfile(req, (err, data) => err ? next(err) : res.redirect('/profile'))
+    userServices.editUserProfile(req, (err, data) => err ? next(err) : res.json({
+      status: 'success',
+      data
+    }))
   },
   teacherPage: (req, res, next) => {
-    userServices.teacherPage(req, (err, data) => err ? next(err) : res.render('teachers/teacherProfileForStudent',  data))
+    userServices.teacherPage(req, (err, data) => err ? next(err) : res.json({
+      status: 'success',
+      data: data.information
+    }))
   },
   selectLesson: (req, res, next) => {
-    userServices.selectLesson(req, (err, data) => {if(err) return next(err)})
+    userServices.selectLesson(req, (err, data) => { 
+      if (err) next(err)
+      try {
+        const userData = data.toJSON()
+        res.json({
+          status: 'success',
+          userData
+        })
+      }
+      catch (err) {
+        next(err)
+      }
+     })
   },
   newComment: (req, res, next) => {
     userServices.newComment(req, (err, data) => {
-      if (err) return next(err)
-      req.flash('success_messages', '評論成功')
-      return res.redirect('/profile')
+      if (err) next(err)
+      try {
+        const userData = data.toJSON()
+        res.json({
+          status: 'success',
+          userData
+        })
+      }
+      catch (err) {
+        next(err)
+      }
     })
+  },
+  getRank: (req, res, next) => {
+    userServices.getRank(req, (err, data) => err ? next(err) : res.json({ status: 'success', data })
+  )},
+  getUnselectedLesson: (req, res, next) => {
+    userServices.getUnselectedLesson(req, (err, data) => err ? next(err) : res.json({
+      status: 'success',
+      data
+    }))
   }
 }
 module.exports = userController

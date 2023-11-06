@@ -19,7 +19,7 @@
       <h3 >Your Teachstyle</h3>
       <h5 class="mb-5">{{teacher.[0].teachStyle}}</h5>
       <h3 class="mb-3">Lesson History</h3>
-      {{#each comments}}
+      {{#each latestComment}}
       <div class="row d-flex justify-content-evenly my-5" style="height: 60px;">
         <div class="col-1 p-4"><span class=" bg-warning p-2 rounded-circle">{{this.score}}</span></div>
         <div class="card col-11 bg-light mb-5 p-3 ">{{this.content}}</div>

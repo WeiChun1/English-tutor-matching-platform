@@ -24,7 +24,7 @@ module.exports = {
       const usageTemp = usageTime[Math.floor(Math.random() * usageTime.length)]
       const teacher_id = teacher.id
       const link = faker.internet.url()
-      let student_id
+      
       
       for (let i = 0; i < Math.ceil(Math.random() * 1) + 2; i++) {
         for (let n = 0; n < i; n++) {
@@ -34,6 +34,7 @@ module.exports = {
         }
       }
       for (let comment_amount = 0; comment_amount < 8; comment_amount++){
+        let student_id
         const random_startTime = time[Math.floor(Math.random() * time.length)].split(":")
         const random_day = - Math.ceil(Math.random() * 14)
         let realStartTime = new Date()
@@ -61,7 +62,9 @@ module.exports = {
       }
       let count = 0
       days.map((day) => {
+        
         for (let index = 0; index < 2; index++) {
+          let student_id
           let realStartTime = new Date()
           let selected = Math.random() > 0.9
           if(count < 2) {
@@ -69,7 +72,8 @@ module.exports = {
             selected = true
           }
           const timeTemp = startTime.split(":")
-          student_id = students[Math.floor(Math.random() * (students.length - 1)) + 1].id
+          if (selected) student_id = students[Math.floor(Math.random() * (students.length - 1)) + 1].id
+          
           //設定起始時間 與近2週課程
           realStartTime.setHours(Number(timeTemp[0]), Number(timeTemp[1]), 0)
           if (day <= realStartTime.getDay()) {
