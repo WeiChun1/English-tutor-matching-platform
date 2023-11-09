@@ -18,4 +18,5 @@ router.get('/teacherProfileForStudent/:id', authenticated, userController.teache
 router.post('/newComment', authenticated, userController.newComment)
 router.get('/tutor', authenticated, userController.indexPage)
 router.post('/select/:id', authenticated, userController.selectLesson)
+router.get('/', userController.signInPage)
 module.exports = router
