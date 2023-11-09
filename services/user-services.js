@@ -93,22 +93,23 @@ const userServices = {
         })
         .then(student => cb(null, student))
         .catch(err => cb(err))
-    }
-    Promise.all([
-      Student.findOne({ where: { id: req.user.id } }),
-      bcrypt.hash(password, 10) 
-    ])
-      .then(([student, hash])=> {
-        return student.update({
-          name,
-          introdution,
-          email,
-          password: hash, 
-          avatar
+    }else{
+      Promise.all([
+        Student.findOne({ where: { id: req.user.id } }),
+        bcrypt.hash(password, 10)
+      ])
+        .then(([student, hash]) => {
+          return student.update({
+            name,
+            introdution,
+            email,
+            password: hash,
+            avatar
+          })
         })
-      })
-      .then(student => cb(null, student))
-      .catch(err => cb(err))
+        .then(student => cb(null, student))
+        .catch(err => cb(err))
+    }
   },
   teacherPage: (req, cb) => {
     Promise.all([
