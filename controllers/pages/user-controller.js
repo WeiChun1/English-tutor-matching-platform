@@ -32,7 +32,7 @@ const userController = {
     userServices.indexPage(req, (err, data) => err ? next(err) : res.render(('index'), data))
   },
   editPage: (req, res) => { res.render("edit") },
-  editUserProfile: (req, res) => {
+  editUserProfile: (req, res, next) => {
     userServices.editUserProfile(req, (err, data) => err ? next(err) : res.redirect('/profile'))
   },
   teacherPage: (req, res, next) => {
