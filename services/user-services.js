@@ -83,9 +83,20 @@ const userServices = {
   },
   editUserProfile: (req, cb) => {
     const { name, introdution, password, avatar, email } = req.body
+    if(!password){
+      Student.findOne({ where: { id: req.user.id } })
+        .then(student =>{
+          return student.update({
+            name,
+            introdution,
+          })
+        })
+        .then(student => cb(null, student))
+        .catch(err => cb(err))
+    }
     Promise.all([
       Student.findOne({ where: { id: req.user.id } }),
-      bcrypt.hash(password, 10)
+      bcrypt.hash(password, 10) 
     ])
       .then(([student, hash])=> {
         return student.update({
