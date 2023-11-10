@@ -5,7 +5,7 @@ const teacherController = {
     res.render('teachers/teacherInfo')
   },
   createTeacher: (req, res, next) => {
-    teacherServices.createTeacher(req, (err, data) => err ? next(err) : res.redirect(`/profile`))
+    teacherServices.createTeacher(req, (err, data) => err ? next(err) : res.redirect(`/tutor`))
   },
   editTeacherPage: (req, res, next) => {
     teacherServices.editTeacherPage(req, (err, data) => err ? next(err) : res.render('teachers/teacherInfo', { lesson: data }))
